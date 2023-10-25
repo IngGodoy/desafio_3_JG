@@ -2,7 +2,7 @@ import fs from "fs";
 
 export class ProductsManager{
     constructor (){
-        this.path = "./products.json"
+        this.path = "./src/data/products.json"
     };
 
     async addProduct(newTitle, newDescription, newPrice, newThumbnail, newCode, newStock){

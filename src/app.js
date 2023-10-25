@@ -39,7 +39,12 @@ app.get("/products/:pid", async (request, response)=>{
 
     try{
         const productById = await productsManager.getProducById(parseInt(pid));
-        response.status(200).json(productById);
+        
+        if(productById === "Not found"){
+            response.status(400).json(productById)
+        }else{
+            response.status(200).json(productById);
+        }
    
     }catch (error){
         response.status(500).json(error.message);
