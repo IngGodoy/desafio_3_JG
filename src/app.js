@@ -14,10 +14,10 @@ app.get("/products", async (request, response)=>{
 
     try{
         const products = await productsManager.getProducts();
-
+        
         if(limit <= products.length && limit > 0 ){
             const newProducts =[];
-            for (let i = 0; i <= limit; i++) {
+            for (let i = 0; i < limit; i++) {
                 newProducts.push(products[i]);
               };
             console.log("lectura 1: ") // borrar
@@ -29,7 +29,7 @@ app.get("/products", async (request, response)=>{
             console.log(products) // borrar
         };    
     }catch (error){
-        response.status(400).json(error.message);
+        response.status(500).json(error.message);
     };
 });
 
@@ -42,7 +42,7 @@ app.get("/products/:pid", async (request, response)=>{
         response.status(200).json(productById);
    
     }catch (error){
-        response.status(400).json(error.message);
+        response.status(500).json(error.message);
     };
 });
 
