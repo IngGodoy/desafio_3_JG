@@ -8,7 +8,7 @@ const PORT = 8080;
 app.use(express.json());
 app.listen(PORT, ()=> console.log("server ok on port: " + PORT));
 
-app.get("/products", async (request, response)=>{
+app.get("/api/products/", async (request, response)=>{
 
     const {limit} = request.query
 
@@ -20,20 +20,16 @@ app.get("/products", async (request, response)=>{
             for (let i = 0; i < limit; i++) {
                 newProducts.push(products[i]);
               };
-            console.log("lectura 1: ") // borrar
-            console.log(newProducts) // borrar
             response.status(200).json(newProducts);
         }else{
             response.status(200).json(products);
-            console.log("lectura 2: ") // borrar
-            console.log(products) // borrar
         };    
     }catch (error){
         response.status(500).json(error.message);
     };
 });
 
-app.get("/products/:pid", async (request, response)=>{
+app.get("/api/products/:pid", async (request, response)=>{
 
     const {pid} = request.params;
 
@@ -49,6 +45,43 @@ app.get("/products/:pid", async (request, response)=>{
     }catch (error){
         response.status(500).json(error.message);
     };
+});
+
+app.post("/api/products/", async (request, response)=>{
+    try{
+        const newProdct =  request.body;
+        const checkCreation = await productsManager.addProduct(newProdct);
+        console.log(checkCreation);
+        if(checkCreation){
+            response.status(200).json(newProdct); 
+        }else {
+            response.status(400).json({message:`invalid product error`});
+        };
+        
+    }catch (error){
+        response.status(500).json(error.message);
+    };  
+});
+
+app.put("/api/products/:pid", async (request, response)=>{
+    try{
+        const {pid} = request.params;
+        const updateProduct = request.body;
+        const productCheckUpdate = await productsManager.updateProductById(parseInt(pid),updateProduct);
+        productCheckUpdate ? response.status(200).json({... updateProduct,pid}) : response.status(400).json({message:`invalid product error`});
+    }catch (error){
+        response.status(500).json(error.message);
+    };  
+});
+
+app.delete("/api/products/:pid", async (request, response)=>{
+    try{
+        const {pid} = request.params;
+        const productCheckDelete = await productsManager.deletProduct(parseInt(pid));
+        productCheckDelete ? response.status(200).json({message:`removed product`}) : response.status(400).json({message:`invalid product error`});
+    }catch (error){
+        response.status(500).json(error.message);
+    };  
 });
 
 
